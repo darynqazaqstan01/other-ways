@@ -535,21 +535,7 @@ export default function Page() {
           >
             {ch.description}
           </p>
-          {isMobile && (
-            <div
-              style={{
-                marginTop: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                flexWrap: "wrap",
-                gap: "8px",
-                pointerEvents: "auto",
-              }}
-            >
-              <LangButtons />
-            </div>
-          )}        </div>
+        </div>
 
         <div
           style={
