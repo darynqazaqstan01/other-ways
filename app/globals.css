@@ -52,7 +52,7 @@ body {
   /* кейіпкер: төменірек әрі мөлдірірек — мәтінді баспайды */
   .hero-char {
     right: 50% !important;
-    transform: translateX(100%) !important;
+    transform: translateX(50%) !important;
     height: 44vh !important;
     bottom: 0 !important;
     opacity: 0.22 !important;
