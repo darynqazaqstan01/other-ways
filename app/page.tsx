@@ -217,23 +217,47 @@ export default function Page() {
           justifyContent: "space-between",
           flexWrap: "wrap",
           rowGap: "10px",
-          padding: "24px 40px",
+          padding: isMobile ? "14px 16px 12px" : "24px 40px",
           zIndex: 3,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: isMobile ? "8px" : "14px",
+            flexWrap: "wrap",
+            marginRight: isMobile ? "auto" : 0,
+            maxWidth: isMobile ? "72%" : "none",
+          }}
+        >
           <img
             src="/logo/BezdGam.png"
             alt="Bezdary Games"
-            style={{ height: "100px", width: "auto", display: "block" }}
+            style={{
+              height: isMobile ? "56px" : "100px",
+              width: "auto",
+              display: "block",
+            }}
           />
-          <span style={{ color: "#ffffff", fontSize: "22px", lineHeight: 1, opacity: 0.7 }}>
+          <span
+            style={{
+              color: "#ffffff",
+              fontSize: isMobile ? "16px" : "22px",
+              lineHeight: 1,
+              opacity: 0.7,
+            }}
+          >
             ×
           </span>
           <img
             src="/logo/OtherWays-logo.png"
             alt="Other Ways"
-            style={{ height: "50px", width: "auto", display: "block" }}
+            style={{
+              height: isMobile ? "24px" : "50px",
+              width: "auto",
+              display: "block",
+            }}
           />
         </div>
 
@@ -307,7 +331,7 @@ export default function Page() {
         )}
 
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "14px" }}>
-          <LangButtons />
+          {!isMobile && <LangButtons />}
 
           {isMobile && (
             <button
@@ -511,7 +535,21 @@ export default function Page() {
           >
             {ch.description}
           </p>
-        </div>
+          {isMobile && (
+            <div
+              style={{
+                marginTop: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                flexWrap: "wrap",
+                gap: "8px",
+                pointerEvents: "auto",
+              }}
+            >
+              <LangButtons />
+            </div>
+          )}        </div>
 
         <div
           style={
