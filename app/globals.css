@@ -30,31 +30,48 @@ body {
     font-size: 16px !important;
   }
 
-  /* персонаж мәтіні: кішірек, тығызырақ, жоғарырақ */
-  .hero-text {
-    left: 50% !important;
-    top: 30% !important;
-    transform: translate(-50%, -50%) !important;
-    text-align: center !important;
+  /* секцияны тік бағанға айналдырамыз: сурет ЖОҒАРЫ, мәтін ТӨМЕН */
+  section[aria-label="character"] {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding-top: 92px !important;
+  }
+
+  /* кейіпкер — толық, мөлдір емес, жоғарыда */
+  .hero-char {
+    order: 1 !important;
+    position: static !important;
+    transform: none !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
     max-width: 88vw !important;
+    height: 40vh !important;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* мәтін — төменде, ортада */
+  .hero-text {
+    order: 2 !important;
+    position: static !important;
+    transform: none !important;
+    text-align: center !important;
+    max-width: 92vw !important;
+    padding: 6px 18px 24px !important;
   }
   .hero-text h1 {
-    font-size: 40px !important;
+    font-size: 38px !important;
     letter-spacing: 0.06em !important;
   }
   .hero-text p {
-    font-size: 12.5px !important;
-    line-height: 1.65 !important;
-    margin-top: 14px !important;
-    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.95) !important;
-  }
-
-  /* кейіпкер: төменірек әрі мөлдірірек — мәтінді баспайды */
-  .hero-char {
-    right: 50% !important;
-    transform: translateX(50%) !important;
-    height: 44vh !important;
-    bottom: 0 !important;
-    opacity: 0.22 !important;
+    font-size: 12px !important;
+    line-height: 1.6 !important;
+    margin-top: 12px !important;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9) !important;
   }
 }
