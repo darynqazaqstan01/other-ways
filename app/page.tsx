@@ -79,7 +79,7 @@ export default function Page() {
           <img
             src="/logo/BezdGam.png"
             alt="Bezdary Games"
-            style={{ height: "50px", width: "auto", display: "block" }}
+            style={{ height: "100px", width: "auto", display: "block" }}
           />
           <span style={{ color: "#ffffff", fontSize: "22px", lineHeight: 1, opacity: 0.7 }}>
             ×
