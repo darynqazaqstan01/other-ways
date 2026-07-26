@@ -1,2 +1,33 @@
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: #ffffff; color: #111111; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #000000;
+  color: #ffffff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ===== ТЕЛЕФОН ҒАНА (640px-тен тар экран) =====
+   Бұл блок компьютерге ТИМЕЙДІ.
+   Мұндағы сандарды қалауыңша өзгерт — десктоп бұзылмайды. */
+@media (max-width: 640px) {
+  header {
+    padding: 12px 16px !important;
+  }
+  header > div {
+    gap: 8px !important;
+  }
+  header img[alt="Bezdary Games"] {
+    height: 34px !important;
+  }
+  header img[alt="Other Ways"] {
+    height: 22px !important;
+  }
+  header span {
+    font-size: 16px !important;
+  }
+}
