@@ -18,6 +18,7 @@ const NAV = ["HOME", "CHARACTERS", "STORY", "WORLD", "GALLERY", "DOWNLOAD"];
 
 const ACCENT = "#76e000";
 
+// Базалық макет — бүкіл сайт осы өлшемде сызылады, сосын scale арқылы масштабталады.
 const BASE_W = 1920;
 const BASE_H = 1080;
 
@@ -31,6 +32,7 @@ export default function Page() {
 
   const [scale, setScale] = useState(1);
 
+  // Фон слайд-шоуы
   useEffect(() => {
     const id = setInterval(() => {
       setCurrent((c) => (c + 1) % SLIDES.length);
@@ -38,6 +40,7 @@ export default function Page() {
     return () => clearInterval(id);
   }, []);
 
+  // Canvas-ты терезеге пропорционалды сыйдыру (letterbox симметриялы)
   useEffect(() => {
     const fit = () => {
       const s = Math.min(window.innerWidth / BASE_W, window.innerHeight / BASE_H);
@@ -96,6 +99,7 @@ export default function Page() {
   );
 
   return (
+    {/* СЫРТҚЫ КОНТЕЙНЕР — бүкіл viewport, қара, ортаға центровка */}
     <div
       style={{
         position: "fixed",
@@ -107,6 +111,7 @@ export default function Page() {
         justifyContent: "center",
       }}
     >
+      {/* CANVAS — 1920×1080, біртұтас масштабталады */}
       <div
         style={{
           position: "relative",
@@ -118,6 +123,7 @@ export default function Page() {
           transformOrigin: "center center",
         }}
       >
+        {/* 1-қабат: бұлыңғыр фон слайд-шоуы */}
         {SLIDES.map((src, i) => (
           <div
             key={src}
@@ -136,6 +142,7 @@ export default function Page() {
           />
         ))}
 
+        {/* 2-қабат: қараңғы қақпақ */}
         <div
           style={{
             position: "absolute",
@@ -146,6 +153,7 @@ export default function Page() {
           }}
         />
 
+        {/* 3-қабат: хедер */}
         <header
           style={{
             position: "absolute",
@@ -159,6 +167,7 @@ export default function Page() {
             zIndex: 3,
           }}
         >
+          {/* сол: логотиптер */}
           <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             <img
               src="/logo/BezdGam.png"
@@ -175,6 +184,7 @@ export default function Page() {
             />
           </div>
 
+          {/* орта: навигация — canvas-тың дәл ортасына қадалған */}
           <nav
             aria-label="primary"
             style={{
@@ -242,11 +252,13 @@ export default function Page() {
             })}
           </nav>
 
+          {/* оң: тіл селекторы */}
           <div style={{ marginLeft: "auto" }}>
             <LangButtons />
           </div>
         </header>
 
+        {/* 4-қабат: персонаж */}
         <section
           aria-label="character"
           style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}
