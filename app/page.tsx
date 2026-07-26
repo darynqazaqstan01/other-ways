@@ -21,7 +21,6 @@ export default function Page() {
     return () => clearInterval(id);
   }, []);
 
-  // Қазір бір ғана персонаж. Кейін стрелка қосқанда мұны index-ке ауыстырамыз.
   const ch = CHARACTERS[0];
 
   return (
@@ -94,7 +93,7 @@ export default function Page() {
         </div>
       </header>
 
-      {/* 4-қабат: персонаж — сол жақта ат+сипаттама, оң жақта сурет */}
+      {/* 4-қабат: персонаж */}
       <section
         aria-label="character"
         style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}
@@ -142,7 +141,7 @@ export default function Page() {
           alt={ch.name}
           style={{
             position: "absolute",
-            right: 0,
+            right: "clamp(0px, 4vw, 90px)",
             bottom: 0,
             height: "clamp(320px, 88vh, 920px)",
             width: "auto",

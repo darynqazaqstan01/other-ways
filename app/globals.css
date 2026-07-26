@@ -13,7 +13,6 @@ body {
 
 /* ===== ТЕЛЕФОН ҒАНА (640px-тен тар) — компьютерге ТИМЕЙДІ ===== */
 @media (max-width: 640px) {
-  /* логотиптер */
   header {
     padding: 12px 16px !important;
   }
@@ -30,17 +29,24 @@ body {
     font-size: 16px !important;
   }
 
-  /* персонаж: мәтін ортаға, сурет артқы планға */
   .hero-text {
     left: 50% !important;
-    top: 40% !important;
+    top: 36% !important;
     transform: translate(-50%, -50%) !important;
     text-align: center !important;
-    max-width: 88vw !important;
+    max-width: 90vw !important;
+  }
+  .hero-text h1 {
+    font-size: 44px !important;
+  }
+  .hero-text p {
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.95) !important;
   }
   .hero-char {
-    opacity: 0.3 !important;
-    height: 62vh !important;
-    right: -8% !important;
+    right: 50% !important;
+    transform: translateX(50%) !important;
+    height: 52vh !important;
+    bottom: 0 !important;
+    opacity: 0.28 !important;
   }
 }
