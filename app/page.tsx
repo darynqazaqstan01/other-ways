@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { CHARACTERS } from "@/lib/characters";
 
-// Суреттер тізімі — реті осылай ауысады.
 const SLIDES = [
   "/bg-hero.png",
   "/bg-2.png",
@@ -14,13 +14,15 @@ const SLIDES = [
 export default function Page() {
   const [current, setCurrent] = useState(0);
 
-  // Әр 10 секунд сайын келесі суретке ауысады
   useEffect(() => {
     const id = setInterval(() => {
       setCurrent((c) => (c + 1) % SLIDES.length);
     }, 10000);
     return () => clearInterval(id);
   }, []);
+
+  // Қазір бір ғана персонаж. Кейін стрелка қосқанда мұны index-ке ауыстырамыз.
+  const ch = CHARACTERS[0];
 
   return (
     <main
@@ -72,7 +74,7 @@ export default function Page() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "24px 40px",
-          zIndex: 2,
+          zIndex: 3,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -90,9 +92,65 @@ export default function Page() {
             style={{ height: "50px", width: "auto", display: "block" }}
           />
         </div>
-
-        {/* оң жақ — әзір бос, кейін тіл ауыстырғыш / меню қоямыз */}
       </header>
+
+      {/* 4-қабат: персонаж — сол жақта ат+сипаттама, оң жақта сурет */}
+      <section
+        aria-label="character"
+        style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}
+      >
+        <div
+          className="hero-text"
+          style={{
+            position: "absolute",
+            left: "clamp(20px, 8vw, 140px)",
+            top: "50%",
+            transform: "translateY(-50%)",
+            maxWidth: "clamp(260px, 42vw, 560px)",
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: "Georgia, 'Times New Roman', serif",
+              color: "#ffffff",
+              fontSize: "clamp(48px, 9vw, 120px)",
+              letterSpacing: "0.08em",
+              lineHeight: 1,
+              fontWeight: 700,
+              margin: 0,
+            }}
+          >
+            {ch.name}
+          </h1>
+          <p
+            style={{
+              fontFamily: "'Courier New', ui-monospace, monospace",
+              color: "rgba(255, 255, 255, 0.85)",
+              fontSize: "clamp(12px, 1.1vw, 16px)",
+              lineHeight: 1.9,
+              letterSpacing: "0.02em",
+              marginTop: "clamp(16px, 2vw, 28px)",
+            }}
+          >
+            {ch.description}
+          </p>
+        </div>
+
+        <img
+          className="hero-char"
+          src={ch.image}
+          alt={ch.name}
+          style={{
+            position: "absolute",
+            right: 0,
+            bottom: 0,
+            height: "clamp(320px, 88vh, 920px)",
+            width: "auto",
+            objectFit: "contain",
+            objectPosition: "bottom right",
+          }}
+        />
+      </section>
     </main>
   );
 }
