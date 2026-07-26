@@ -24,7 +24,7 @@ body {
   header > div {
     gap: 8px !important;
     width: 100% !important;
-    justify-content: center !important;
+    justify-content: left !important;
   }
 
   header img[alt="Bezdary Games"] {
