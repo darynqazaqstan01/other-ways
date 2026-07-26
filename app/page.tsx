@@ -87,7 +87,7 @@ export default function Page() {
           <img
             src="/logo/OtherWays-logo.png"
             alt="Other Ways"
-            style={{ height: "36px", width: "auto", display: "block" }}
+            style={{ height: "50px", width: "auto", display: "block" }}
           />
         </div>
 
