@@ -61,7 +61,7 @@ export default function Page() {
         }}
       />
 
-      {/* 3-қабат: хедер — логотиптер */}
+      {/* 3-қабат: хедер — логотиптер (clamp арқылы адаптивті) */}
       <header
         style={{
           position: "absolute",
@@ -71,23 +71,46 @@ export default function Page() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "24px 40px",
+          padding: "clamp(14px, 4vw, 24px) clamp(16px, 5vw, 40px)",
           zIndex: 2,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "clamp(8px, 2.5vw, 14px)",
+          }}
+        >
           <img
             src="/logo/BezdGam.png"
             alt="Bezdary Games"
-            style={{ height: "100px", width: "auto", display: "block" }}
+            style={{
+              height: "clamp(20px, 5.5vw, 36px)",
+              width: "auto",
+              display: "block",
+              transition: "height 0.3s ease",
+            }}
           />
-          <span style={{ color: "#ffffff", fontSize: "22px", lineHeight: 1, opacity: 0.7 }}>
+          <span
+            style={{
+              color: "#ffffff",
+              fontSize: "clamp(15px, 4vw, 22px)",
+              lineHeight: 1,
+              opacity: 0.7,
+            }}
+          >
             ×
           </span>
           <img
             src="/logo/OtherWays-logo.png"
             alt="Other Ways"
-            style={{ height: "50px", width: "auto", display: "block" }}
+            style={{
+              height: "clamp(20px, 5.5vw, 36px)",
+              width: "auto",
+              display: "block",
+              transition: "height 0.3s ease",
+            }}
           />
         </div>
 
