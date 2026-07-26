@@ -11,8 +11,15 @@ const SLIDES = [
   "/bg-6.png",
 ];
 
+const LANGS = ["KZ", "RU", "EN", "CN"] as const;
+type Lang = (typeof LANGS)[number];
+
+const ACCENT = "#76e000"; // референстегі лайм-жасыл
+
 export default function Page() {
   const [current, setCurrent] = useState(0);
+  const [lang, setLang] = useState<Lang>("KZ");
+  const [hovered, setHovered] = useState<Lang | null>(null);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -62,7 +69,7 @@ export default function Page() {
         }}
       />
 
-      {/* 3-қабат: хедер — логотиптер */}
+      {/* 3-қабат: хедер — логотиптер + тіл селекторы */}
       <header
         style={{
           position: "absolute",
@@ -72,6 +79,8 @@ export default function Page() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          flexWrap: "wrap",
+          rowGap: "10px",
           padding: "24px 40px",
           zIndex: 3,
         }}
@@ -91,6 +100,61 @@ export default function Page() {
             style={{ height: "50px", width: "auto", display: "block" }}
           />
         </div>
+
+        {/* тіл селекторы — оң жақта */}
+        <nav
+          aria-label="language"
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: "clamp(6px, 0.9vw, 12px)",
+          }}
+        >
+          {LANGS.map((l) => {
+            const isActive = l === lang;
+            const isHover = l === hovered;
+            return (
+              <button
+                key={l}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setLang(l)}
+                onMouseEnter={() => setHovered(l)}
+                onMouseLeave={() => setHovered(null)}
+                onFocus={() => setHovered(l)}
+                onBlur={() => setHovered(null)}
+                style={{
+                  appearance: "none",
+                  WebkitAppearance: "none",
+                  border: `1.5px solid ${
+                    isActive ? ACCENT : isHover ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.5)"
+                  }`,
+                  borderRadius: "clamp(8px, 1vw, 12px)",
+                  background:
+                    isHover && !isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                  color: isActive ? ACCENT : "rgba(255,255,255,0.92)",
+                  fontFamily: "inherit",
+                  fontWeight: 700,
+                  fontSize: "clamp(11px, 1.1vw, 15px)",
+                  letterSpacing: "0.06em",
+                  padding: "clamp(6px, 0.8vw, 9px) clamp(11px, 1.3vw, 17px)",
+                  lineHeight: 1,
+                  cursor: "pointer",
+                  transform: isHover ? "translateY(-2px)" : "translateY(0)",
+                  boxShadow: isActive
+                    ? `0 0 12px ${ACCENT}55, inset 0 0 8px ${ACCENT}22`
+                    : isHover
+                    ? "0 4px 14px rgba(0,0,0,0.45)"
+                    : "none",
+                  transition: "all 0.22s ease",
+                }}
+              >
+                {l}
+              </button>
+            );
+          })}
+        </nav>
       </header>
 
       {/* 4-қабат: персонаж */}
@@ -124,7 +188,7 @@ export default function Page() {
           <p
             style={{
               fontFamily: "'Courier New', ui-monospace, monospace",
-              color: "rgba(255, 255, 255, 0.85)",
+              color: "rgba(255,255,255,0.85)",
               fontSize: "clamp(12px, 1.1vw, 16px)",
               lineHeight: 1.9,
               letterSpacing: "0.02em",
