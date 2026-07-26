@@ -36,9 +36,9 @@ export default function Page() {
     return () => clearInterval(id);
   }, []);
 
-  // Экран енін бақылаймыз: тарылса — гамбургерге көшеміз
+  // Экран енін бақылаймыз: 1280px-тен тарылса — гамбургерге көшеміз
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1100);
+    const check = () => setIsMobile(window.innerWidth < 1280);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
@@ -182,11 +182,20 @@ export default function Page() {
           />
         </div>
 
-        {/* орта: навигация (тек кең экранда) */}
+        {/* орта: навигация — хедердің ДӘЛ ортасына қадалған (тек кең экранда) */}
         {!isMobile && (
           <nav
             aria-label="primary"
-            style={{ display: "flex", alignItems: "center", gap: "clamp(14px, 1.8vw, 30px)" }}
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              display: "flex",
+              alignItems: "center",
+              gap: "clamp(14px, 1.8vw, 30px)",
+              whiteSpace: "nowrap",
+            }}
           >
             {NAV.map((item) => {
               const isActive = item === activeNav;
