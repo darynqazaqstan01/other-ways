@@ -113,7 +113,14 @@ export default function Page() {
   return (
     <main
       style={{
-        minHeight: "100vh",
+        // ЕСКЕРТУ: бұрын "minHeight: 100vh" болатын. 100vh — беттің толық
+        // логикалық биіктігі, ал браузердің НАҚТЫ көрінетін биіктігі бұдан
+        // кіші болуы мүмкін (мобильді адрес жолағы, терезе масштабы
+        // өзгергенде және т.б.). Сол алшақтық салдарынан bottom:0-ге
+        // бекітілген персонаж суреті нақты экраннан төмен, көрінбейтін
+        // жерге "кетіп қалатын". 100dvh — нақты көрінетін биіктікке
+        // бейімделетін динамикалық бірлік, сондықтан бұл мәселені шешеді.
+        height: "100dvh",
         width: "100%",
         position: "relative",
         overflow: "hidden",
@@ -454,20 +461,44 @@ export default function Page() {
           </p>
         </div>
 
-        <img
-          className="hero-char"
-          src={ch.image}
-          alt={ch.name}
+        {/*
+          ЕСКЕРТУ: бұрын <img> тікелей "position:absolute; bottom:0;
+          height: clamp(320px, 88vh, 920px)" арқылы орналастырылған еді.
+          88vh — логикалық vh-тен есептеледі, ал ол терезе/браузер
+          масштабы өзгергенде НАҚТЫ көрінетін биіктіктен үлкен болып
+          кетуі мүмкін еді — сондықтан сурет "төменге, экраннан тыс"
+          кетіп қалатын.
+
+          Енді суретті flex-контейнердің ішіне саламыз: контейнер
+          <section>-дің (яғни <main>-нің, ол 100dvh) НАҚТЫ биіктігін
+          алады да, alignItems:"flex-end" арқылы суретті контейнердің
+          өз түбіне бекітеді. Бұл vh есебіне тәуелді емес, сондықтан
+          кез келген масштабта/өлшемде тұрақты.
+        */}
+        <div
           style={{
             position: "absolute",
-            right: "clamp(0px, 4vw, 90px)",
-            bottom: 0,
-            height: "clamp(320px, 88vh, 920px)",
-            width: "auto",
-            objectFit: "contain",
-            objectPosition: "bottom right",
+            inset: 0,
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "flex-end",
+            paddingRight: "clamp(0px, 4vw, 90px)",
           }}
-        />
+        >
+          <img
+            className="hero-char"
+            src={ch.image}
+            alt={ch.name}
+            style={{
+              display: "block",
+              height: "clamp(320px, 88%, 920px)",
+              maxHeight: "100%",
+              width: "auto",
+              objectFit: "contain",
+              objectPosition: "bottom right",
+            }}
+          />
+        </div>
       </section>
     </main>
   );
