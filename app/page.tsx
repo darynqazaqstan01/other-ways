@@ -29,6 +29,11 @@ export default function Page() {
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // ҚОСЫЛДЫ: қай персонаж тұрғанын есте сақтаймыз
+  const [index, setIndex] = useState(0);
+  // ҚОСЫЛДЫ: стрелка hover күйі
+  const [hoverArrow, setHoverArrow] = useState<null | "prev" | "next">(null);
+
   useEffect(() => {
     const id = setInterval(() => {
       setCurrent((c) => (c + 1) % SLIDES.length);
@@ -36,7 +41,6 @@ export default function Page() {
     return () => clearInterval(id);
   }, []);
 
-  // Экран енін бақылаймыз: 1280px-тен тарылса — гамбургерге көшеміз
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1280);
     check();
@@ -44,18 +48,23 @@ export default function Page() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Drawer ашық тұрғанда Esc басса — жабылады
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMenuOpen(false);
+      // ҚОСЫЛДЫ: пернетақтадан да айналады (сол/оң жебе)
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const ch = CHARACTERS[0];
+  // ҚОСЫЛДЫ: бір функция екі бағытқа да (шеңбер бойымен айналу)
+  const go = (dir: number) =>
+    setIndex((i) => (i + dir + CHARACTERS.length) % CHARACTERS.length);
 
-  // Тіл селекторы — хедерде де, drawer-да да қолданылады
+  const ch = CHARACTERS[index];
+
   const LangButtons = ({ vertical = false }: { vertical?: boolean }) => (
     <div
       style={{
@@ -110,23 +119,65 @@ export default function Page() {
     </div>
   );
 
+  // ҚОСЫЛДЫ: стрелка батырмасы (референстегі жұқа шеңберлі жебе)
+  const Arrow = ({ dir }: { dir: "prev" | "next" }) => {
+    const isHover = hoverArrow === dir;
+    return (
+      <button
+        type="button"
+        aria-label={dir === "prev" ? "previous character" : "next character"}
+        onClick={() => go(dir === "prev" ? -1 : 1)}
+        onMouseEnter={() => setHoverArrow(dir)}
+        onMouseLeave={() => setHoverArrow(null)}
+        style={{
+          position: "absolute",
+          top: "50%",
+          transform: `translateY(-50%) scale(${isHover ? 1.1 : 1})`,
+          zIndex: 4,
+          width: "clamp(40px, 3.2vw, 52px)",
+          height: "clamp(40px, 3.2vw, 52px)",
+          borderRadius: "50%",
+          border: `1.5px solid ${isHover ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.4)"}`,
+          background: isHover ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)",
+          backdropFilter: "blur(2px)",
+          WebkitBackdropFilter: "blur(2px)",
+          color: "#ffffff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          padding: 0,
+          transition: "all 0.22s ease",
+          ...(dir === "prev"
+            ? { left: "clamp(16px, 3vw, 60px)" }
+            : { right: "clamp(16px, 3vw, 60px)" }),
+        }}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {dir === "prev" ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
+        </svg>
+      </button>
+    );
+  };
+
   return (
     <main
       style={{
-        // ЕСКЕРТУ: бұрын "minHeight: 100vh" болатын. 100vh — беттің толық
-        // логикалық биіктігі, ал браузердің НАҚТЫ көрінетін биіктігі бұдан
-        // кіші болуы мүмкін (мобильді адрес жолағы, терезе масштабы
-        // өзгергенде және т.б.). Сол алшақтық салдарынан bottom:0-ге
-        // бекітілген персонаж суреті нақты экраннан төмен, көрінбейтін
-        // жерге "кетіп қалатын". 100dvh — нақты көрінетін биіктікке
-        // бейімделетін динамикалық бірлік, сондықтан бұл мәселені шешеді.
         height: "100dvh",
         width: "100%",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      {/* 1-қабат: бұлыңғыр фон слайд-шоуы */}
       {SLIDES.map((src, i) => (
         <div
           key={src}
@@ -145,7 +196,6 @@ export default function Page() {
         />
       ))}
 
-      {/* 2-қабат: қараңғы қақпақ */}
       <div
         style={{
           position: "absolute",
@@ -156,7 +206,6 @@ export default function Page() {
         }}
       />
 
-      {/* 3-қабат: хедер */}
       <header
         style={{
           position: "absolute",
@@ -172,7 +221,6 @@ export default function Page() {
           zIndex: 3,
         }}
       >
-        {/* сол: логотиптер */}
         <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
           <img
             src="/logo/BezdGam.png"
@@ -189,7 +237,6 @@ export default function Page() {
           />
         </div>
 
-        {/* орта: навигация — хедердің ДӘЛ ортасына қадалған (тек кең экранда) */}
         {!isMobile && (
           <nav
             aria-label="primary"
@@ -239,7 +286,6 @@ export default function Page() {
                   }}
                 >
                   {item}
-                  {/* астын сызу — сол жақтан оңға сызылады */}
                   <span
                     style={{
                       position: "absolute",
@@ -260,7 +306,6 @@ export default function Page() {
           </nav>
         )}
 
-        {/* оң: тіл селекторы + гамбургер */}
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "14px" }}>
           <LangButtons />
 
@@ -305,7 +350,6 @@ export default function Page() {
         </div>
       </header>
 
-      {/* Мобильді drawer — оң жақтан сырғып шығады */}
       <div
         aria-hidden={!menuOpen}
         style={{
@@ -316,7 +360,6 @@ export default function Page() {
           pointerEvents: menuOpen ? "auto" : "none",
         }}
       >
-        {/* қараңғы фон */}
         <div
           onClick={() => setMenuOpen(false)}
           style={{
@@ -329,7 +372,6 @@ export default function Page() {
             transition: "opacity 0.3s ease",
           }}
         />
-        {/* панель */}
         <div
           style={{
             position: "absolute",
@@ -419,20 +461,13 @@ export default function Page() {
         </div>
       </div>
 
-      {/* 4-қабат: персонаж */}
       <section
         aria-label="character"
         style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}
       >
-        {/*
-          Мобильде (isMobile) текст пен персонаж қатар сыймай, бір-бірінің
-          үстіне түсіп кететін еді. Сондықтан мобильде: текст жоғарғы
-          жағында, ені толық (left/right арқылы), ал персонаж төменде,
-          кішірек және ортаға туралап көрсетіледі. Desktop-тағы
-          left/top/transform/maxWidth мәндері мүлдем өзгертілмеді.
-        */}
         <div
-          className="hero-text"
+          className="hero-text char-fade"
+          key={`text-${index}`}
           style={
             isMobile
               ? {
@@ -478,20 +513,6 @@ export default function Page() {
           </p>
         </div>
 
-        {/*
-          ЕСКЕРТУ: бұрын <img> тікелей "position:absolute; bottom:0;
-          height: clamp(320px, 88vh, 920px)" арқылы орналастырылған еді.
-          88vh — логикалық vh-тен есептеледі, ал ол терезе/браузер
-          масштабы өзгергенде НАҚТЫ көрінетін биіктіктен үлкен болып
-          кетуі мүмкін еді — сондықтан сурет "төменге, экраннан тыс"
-          кетіп қалатын.
-
-          Енді суретті flex-контейнердің ішіне саламыз: контейнер
-          <section>-дің (яғни <main>-нің, ол 100dvh) НАҚТЫ биіктігін
-          алады да, alignItems:"flex-end" арқылы суретті контейнердің
-          өз түбіне бекітеді. Бұл vh есебіне тәуелді емес, сондықтан
-          кез келген масштабта/өлшемде тұрақты.
-        */}
         <div
           style={
             isMobile
@@ -514,7 +535,8 @@ export default function Page() {
           }
         >
           <img
-            className="hero-char"
+            className="hero-char char-fade"
+            key={`img-${index}`}
             src={ch.image}
             alt={ch.name}
             style={{
@@ -528,6 +550,10 @@ export default function Page() {
           />
         </div>
       </section>
+
+      {/* ҚОСЫЛДЫ: стрелкалар — section-нен тыс, сондықтан басылады */}
+      <Arrow dir="prev" />
+      <Arrow dir="next" />
     </main>
   );
 }

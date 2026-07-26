@@ -22,3 +22,9 @@ body {
   overflow: hidden;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
+
+@keyframes charFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.char-fade { animation: charFade 0.45s ease both; }
