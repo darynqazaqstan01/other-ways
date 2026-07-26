@@ -18,7 +18,7 @@ export default function Page() {
   useEffect(() => {
     const id = setInterval(() => {
       setCurrent((c) => (c + 1) % SLIDES.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(id); // маңызды: интервалды тазалаймыз
   }, []);
 
