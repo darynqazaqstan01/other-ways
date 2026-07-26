@@ -424,21 +424,38 @@ export default function Page() {
         aria-label="character"
         style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}
       >
+        {/*
+          Мобильде (isMobile) текст пен персонаж қатар сыймай, бір-бірінің
+          үстіне түсіп кететін еді. Сондықтан мобильде: текст жоғарғы
+          жағында, ені толық (left/right арқылы), ал персонаж төменде,
+          кішірек және ортаға туралап көрсетіледі. Desktop-тағы
+          left/top/transform/maxWidth мәндері мүлдем өзгертілмеді.
+        */}
         <div
           className="hero-text"
-          style={{
-            position: "absolute",
-            left: "clamp(20px, 8vw, 140px)",
-            top: "50%",
-            transform: "translateY(-50%)",
-            maxWidth: "clamp(260px, 42vw, 560px)",
-          }}
+          style={
+            isMobile
+              ? {
+                  position: "absolute",
+                  left: "20px",
+                  right: "20px",
+                  top: "12%",
+                  maxWidth: "none",
+                }
+              : {
+                  position: "absolute",
+                  left: "clamp(20px, 8vw, 140px)",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  maxWidth: "clamp(260px, 42vw, 560px)",
+                }
+          }
         >
           <h1
             style={{
               fontFamily: "Georgia, 'Times New Roman', serif",
               color: "#ffffff",
-              fontSize: "clamp(48px, 9vw, 120px)",
+              fontSize: isMobile ? "clamp(34px, 9vw, 58px)" : "clamp(48px, 9vw, 120px)",
               letterSpacing: "0.08em",
               lineHeight: 1,
               fontWeight: 700,
@@ -451,10 +468,10 @@ export default function Page() {
             style={{
               fontFamily: "'Courier New', ui-monospace, monospace",
               color: "rgba(255,255,255,0.85)",
-              fontSize: "clamp(12px, 1.1vw, 16px)",
-              lineHeight: 1.9,
+              fontSize: isMobile ? "clamp(13px, 3.6vw, 15px)" : "clamp(12px, 1.1vw, 16px)",
+              lineHeight: isMobile ? 1.7 : 1.9,
               letterSpacing: "0.02em",
-              marginTop: "clamp(16px, 2vw, 28px)",
+              marginTop: isMobile ? "14px" : "clamp(16px, 2vw, 28px)",
             }}
           >
             {ch.description}
@@ -476,14 +493,25 @@ export default function Page() {
           кез келген масштабта/өлшемде тұрақты.
         */}
         <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "flex-end",
-            paddingRight: "clamp(0px, 4vw, 90px)",
-          }}
+          style={
+            isMobile
+              ? {
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  paddingRight: 0,
+                }
+              : {
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "flex-end",
+                  paddingRight: "clamp(0px, 4vw, 90px)",
+                }
+          }
         >
           <img
             className="hero-char"
@@ -491,11 +519,11 @@ export default function Page() {
             alt={ch.name}
             style={{
               display: "block",
-              height: "clamp(320px, 88%, 920px)",
-              maxHeight: "100%",
+              height: isMobile ? "clamp(220px, 48%, 420px)" : "clamp(320px, 88%, 920px)",
+              maxHeight: isMobile ? "56%" : "100%",
               width: "auto",
               objectFit: "contain",
-              objectPosition: "bottom right",
+              objectPosition: isMobile ? "bottom center" : "bottom right",
             }}
           />
         </div>
