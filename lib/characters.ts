@@ -69,7 +69,7 @@ export const CHARACTERS: Character[] = [
     description:
       "Али — сильный и опытный воин, который может найти общий язык с кем угодно. Вместе с Дари они помогают Никите в его путешествии, понимая друг друга без слов.",
     audio: "/audio/VoiceAli.mp3",
-    imageShift: 300,
+    imageShift: 100,
   },
   {
     id: "dari",
@@ -78,6 +78,6 @@ export const CHARACTERS: Character[] = [
     description:
       "Дари — ловкая и опытная воительница, которая отлично ориентируется на местности. Вместе с Али они помогают Никите в его путешествии, понимая друг друга без слов.",
     audio: "/audio/VoiceDari.mp3",
-    imageShift: 300,
+    imageShift: 100,
   },
 ];
