@@ -13,6 +13,7 @@ const SLIDES = [
 ];
 
 const LANGS = ["KZ", "RU", "EN", "CN"] as const;
+
 type Lang = (typeof LANGS)[number];
 
 const NAV = ["HOME", "CHARACTERS", "STORY", "WORLD", "ARTEFACTS", "DOWNLOAD"];
@@ -30,9 +31,7 @@ export default function Page() {
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // ҚОСЫЛДЫ: қай персонаж тұрғанын есте сақтаймыз
   const [index, setIndex] = useState(0);
-  // ҚОСЫЛДЫ: стрелка hover күйі
   const [hoverArrow, setHoverArrow] = useState<null | "prev" | "next">(null);
 
   useEffect(() => {
@@ -52,7 +51,6 @@ export default function Page() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMenuOpen(false);
-      // ҚОСЫЛДЫ: пернетақтадан да айналады (сол/оң жебе)
       if (e.key === "ArrowLeft") go(-1);
       if (e.key === "ArrowRight") go(1);
     };
@@ -60,7 +58,6 @@ export default function Page() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // ҚОСЫЛДЫ: бір функция екі бағытқа да (шеңбер бойымен айналу)
   const go = (dir: number) =>
     setIndex((i) => (i + dir + CHARACTERS.length) % CHARACTERS.length);
 
@@ -120,7 +117,6 @@ export default function Page() {
     </div>
   );
 
-  // ҚОСЫЛДЫ: стрелка батырмасы (референстегі жұқа шеңберлі жебе)
   const Arrow = ({ dir }: { dir: "prev" | "next" }) => {
     const isHover = hoverArrow === dir;
     return (
@@ -536,7 +532,27 @@ export default function Page() {
           >
             {ch.description}
           </p>
-          {ch.audio && <VoicePlayer src={ch.audio} />}
+
+          {/* ПЛЕЕР(ЛЕР): string болса — біреу, массив болса — әр трекке бөлек */}
+          {ch.audio && (
+            <div
+              style={{
+                pointerEvents: "auto",
+                marginTop: "26px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+            >
+              {typeof ch.audio === "string" ? (
+                <VoicePlayer src={ch.audio} />
+              ) : (
+                ch.audio.map((t) => (
+                  <VoicePlayer key={t.src} src={t.src} label={t.label} />
+                ))
+              )}
+            </div>
+          )}
         </div>
 
         <div
@@ -580,7 +596,6 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ҚОСЫЛДЫ: стрелкалар — section-нен тыс, сондықтан басылады */}
       <Arrow dir="prev" />
       <Arrow dir="next" />
     </main>

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const ACCENT = "#76e000";
-// Кішкентай тақырып — қаласаң өзгерт: "ОЗВУЧКА", "VOICE", "ДАУЫСЫ" т.б.
+// Кішкентай тақырып — label берілмесе, осы шығады.
 const VOICE_LABEL = "ДАУЫСЫ";
 
 function fmt(t: number) {
@@ -12,7 +12,7 @@ function fmt(t: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export default function VoicePlayer({ src }: { src: string }) {
+export default function VoicePlayer({ src, label }: { src: string; label?: string }) {
   const ref = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0); // 0..1
@@ -29,6 +29,17 @@ export default function VoicePlayer({ src }: { src: string }) {
     setPlaying(false);
     setProgress(0);
   }, [src]);
+
+  // Компонент өшкенде (персонаж/трек ауысқанда) — дыбысты тоқтат
+  useEffect(() => {
+    const a = ref.current;
+    return () => {
+      if (a) {
+        a.pause();
+        a.currentTime = 0;
+      }
+    };
+  }, []);
 
   const toggle = () => {
     const a = ref.current;
@@ -60,7 +71,6 @@ export default function VoicePlayer({ src }: { src: string }) {
         display: "flex",
         alignItems: "center",
         gap: "14px",
-        marginTop: "26px",
         maxWidth: "440px",
         userSelect: "none",
       }}
@@ -121,7 +131,7 @@ export default function VoicePlayer({ src }: { src: string }) {
             textTransform: "uppercase",
           }}
         >
-          {VOICE_LABEL}
+          {label ?? VOICE_LABEL}
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div
