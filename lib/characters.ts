@@ -88,7 +88,7 @@ export const CHARACTERS: Character[] = [
   {
     id: "goblinigor",
     name: "GOBLIN IGOR",
-    image: "/characters/Goblin_Igor.png",
+    image: "/characters/GoblinIgor.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
     audio: "/audio/VoiceGoblinIgor.mp3",
   },
