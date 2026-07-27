@@ -64,10 +64,20 @@ export const CHARACTERS: Character[] = [
   },
   {
     id: "ali",
-    name: "Ali",
-    image: "/characters/Ali.png",
-    description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
+    name: "АЛИ",
+    image: "/characters/Ali_and_Dari.png",
+    description:
+      "Али — сильный и опытный воин, который может найти общий язык с кем угодно. Вместе с Дари они помогают Никите в его путешествии, понимая друг друга без слов.",
     audio: "/audio/VoiceAli.mp3",
+    imageShift: 300,
+  },
+  {
+    id: "dari",
+    name: "ДАРИ",
+    image: "/characters/Ali_and_Dari.png",
+    description:
+      "Дари — ловкая и опытная воительница, которая отлично ориентируется на местности. Вместе с Али они помогают Никите в его путешествии, понимая друг друга без слов.",
+    audio: "/audio/VoiceDari.mp3",
     imageShift: 300,
   },
 ];
