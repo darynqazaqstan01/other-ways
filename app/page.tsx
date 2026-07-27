@@ -15,7 +15,7 @@ const SLIDES = [
 const LANGS = ["KZ", "RU", "EN", "CN"] as const;
 type Lang = (typeof LANGS)[number];
 
-const NAV = ["HOME", "CHARACTERS", "STORY", "WORLD", "GALLERY", "DOWNLOAD"];
+const NAV = ["HOME", "CHARACTERS", "STORY", "WORLD", "ARTEFACTS", "DOWNLOAD"];
 
 const ACCENT = "#76e000";
 
