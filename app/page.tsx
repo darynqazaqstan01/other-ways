@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { CHARACTERS } from "@/lib/characters";
+import VoicePlayer from "@/components/VoicePlayer";
 
 const SLIDES = [
   "/bg-hero.png",
@@ -535,6 +536,7 @@ export default function Page() {
           >
             {ch.description}
           </p>
+          {ch.audio && <VoicePlayer src={ch.audio} />}
         </div>
 
         <div
