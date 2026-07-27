@@ -67,6 +67,6 @@ export const CHARACTERS: Character[] = [
     image: "/characters/Artur.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
     audio: "/audio/VoiceArtur.mp3",
-    imageShift: 180,
+    imageShift: 230,
   },
 ];
