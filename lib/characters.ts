@@ -56,4 +56,11 @@ export const CHARACTERS: Character[] = [
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
     imageShift: -150,
   },
+  {
+    id: "alexandro",
+    name: "ALEXANDRO",
+    image: "/characters/Alexandro.png",
+    description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
+    audio: "/audio/VoiceAlexandro.mp3",
+  },
 ];
