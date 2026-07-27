@@ -61,4 +61,11 @@ export const CHARACTERS: Character[] = [
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
     audio: "/audio/VoiceAlexandro.mp3",
   },
+  {
+    id: "artur",
+    name: "ARTUR",
+    image: "/characters/Artur.png",
+    description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
+    audio: "/audio/VoiceArtur.mp3",
+  },
 ];
