@@ -76,7 +76,7 @@ export const CHARACTERS: Character[] = [
       { src: "/audio/VoiceAli.mp3", label: "АЛИ" },
       { src: "/audio/VoiceDari.mp3", label: "ДАРИ" },
     ],
-    imageShift: 300,
+    imageShift: 150,
   },
   {
     id: "nazarik",
