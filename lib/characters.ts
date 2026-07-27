@@ -23,14 +23,14 @@ export const CHARACTERS: Character[] = [
     name: "ARANEL",
     image: "/characters/Aranel.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
-    audio: "/audio/VoiceAranel.mp3",
+    audio: "/audio/VoiceArarnel.mp3",
   },
   {
     id: "disastrix",
     name: "DISASTRIX",
     image: "/characters/Disastrix.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
-    audio: "/audio/VoiceDisastrix.mp3",
+    audio: "/audio/VoiceDisasstrix.mp3",
   },
   {
     id: "tom",
