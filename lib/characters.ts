@@ -48,13 +48,6 @@ export const CHARACTERS: Character[] = [
     imageShift: 180,
   },
   {
-    id: "nikita-and-diana",
-    name: "NIKITA & DIANA",
-    image: "/characters/Nikita_and_Diana.png",
-    description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
-    imageShift: -150,
-  },
-  {
     id: "alexandro",
     name: "ALEXANDRO",
     image: "/characters/Alexandro.png",
