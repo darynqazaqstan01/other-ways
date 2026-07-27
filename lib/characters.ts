@@ -62,4 +62,12 @@ export const CHARACTERS: Character[] = [
     audio: "/audio/VoiceArtur.mp3",
     imageShift: 300,
   },
+  {
+    id: "ali",
+    name: "Ali",
+    image: "/characters/Ali.png",
+    description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
+    audio: "/audio/VoiceAli.mp3",
+    imageShift: 300,
+  },
 ];
