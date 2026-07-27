@@ -45,7 +45,7 @@ export const CHARACTERS: Character[] = [
     name: "VOZHAK GOBLINOV",
     image: "/characters/Vozhak_Goblinov.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
-    imageShift: 150,
+    imageShift: 180,
   },
   {
     id: "nikita-and-diana",
