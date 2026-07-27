@@ -570,6 +570,9 @@ export default function Page() {
               width: "auto",
               objectFit: "contain",
               objectPosition: isMobile ? "bottom center" : "bottom right",
+              transform:
+                !isMobile && ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
+              transition: "transform 0.4s ease",
             }}
           />
         </div>

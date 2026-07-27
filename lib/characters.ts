@@ -3,10 +3,11 @@ export type Character = {
   name: string;
   image: string;
   description: string;
+  // Тек десктопта: суретті ОҢҒА жылжыту (пиксель). Әдепкі 0 = қозғалмайды.
+  // Мәтінді басып қалған персонажқа ғана мән бер — қалғанына тимейсің.
+  imageShift?: number;
 };
 
-// Реті осылай — стрелка сол ретпен айналады. Қаласаң жолдардың орнын ауыстыр.
-// name мен description-ды өзің қалағаныңша өзгерт — бәрі осы жерде.
 export const CHARACTERS: Character[] = [
   {
     id: "nikita",
@@ -44,6 +45,7 @@ export const CHARACTERS: Character[] = [
     name: "VOZHAK GOBLINOV",
     image: "/characters/Vozhak_Goblinov.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
+    imageShift: 150,
   },
   {
     id: "nikita-and-diana",
