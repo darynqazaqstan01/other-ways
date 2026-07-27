@@ -106,4 +106,11 @@ export const CHARACTERS: Character[] = [
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
     audio: "/audio/VoiceLesana.mp3",
   },
+  {
+    id: "korolobezyanchikruslanchik",
+    name: "Король Обезьянчик Русланчик",
+    image: "/characters/KorolobezyanchikRuslanchik.png.png",
+    description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
+    audio: "/audio/VoiceKorolobezyanchikRuslanchik.mp3",
+  },
 ];
