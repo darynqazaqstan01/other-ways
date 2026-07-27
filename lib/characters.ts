@@ -109,7 +109,7 @@ export const CHARACTERS: Character[] = [
   {
     id: "korolobezyanchikruslanchik",
     name: "Король Обезьянчик Русланчик",
-    image: "/characters/KorolobezyanchikRuslanchik.png.png",
+    image: "/characters/KorolobezyanchikRuslanchik.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
     audio: "/audio/VoiceKorolobezyanchikRuslanchik.mp3",
   },
