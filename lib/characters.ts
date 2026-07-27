@@ -52,6 +52,6 @@ export const CHARACTERS: Character[] = [
     name: "NIKITA & DIANA",
     image: "/characters/Nikita_and_Diana.png",
     description: "Сипаттамасы әзірленуде — осы жолды өзің қалаған мәтінмен ауыстыр.",
-    imageShift: 150,
+    imageShift: -150,
   },
 ];
