@@ -117,6 +117,8 @@ export default function Page() {
     </div>
   );
 
+  // Мобильде strелкалар экранның дәл ортасында емес, кейіпкер суретінің
+  // тұсында тұрады — жоғарыда толық ені бойынша созылатын мәтінмен қабаттаспас үшін.
   const Arrow = ({ dir }: { dir: "prev" | "next" }) => {
     const isHover = hoverArrow === dir;
     return (
@@ -128,8 +130,9 @@ export default function Page() {
         onMouseLeave={() => setHoverArrow(null)}
         style={{
           position: "absolute",
-          top: "50%",
-          transform: `translateY(-50%) scale(${isHover ? 1.1 : 1})`,
+          top: isMobile ? "auto" : "50%",
+          bottom: isMobile ? "22%" : "auto",
+          transform: `translateY(${isMobile ? "0px" : "-50%"}) scale(${isHover ? 1.1 : 1})`,
           zIndex: 4,
           width: "clamp(40px, 3.2vw, 52px)",
           height: "clamp(40px, 3.2vw, 52px)",
@@ -165,6 +168,49 @@ export default function Page() {
       </button>
     );
   };
+
+  const LogoBlock = () => (
+    <div
+      style={{
+        flex: "0 0 auto",
+        display: "flex",
+        alignItems: "center",
+        gap: isMobile ? "8px" : "14px",
+        flexWrap: "wrap",
+        marginRight: isMobile ? "auto" : 0,
+        maxWidth: isMobile ? "72%" : "none",
+      }}
+    >
+      <img
+        src="/logo/BezdGam.png"
+        alt="Bezdary Games"
+        style={{
+          height: isMobile ? "56px" : "100px",
+          width: "auto",
+          display: "block",
+        }}
+      />
+      <span
+        style={{
+          color: "#ffffff",
+          fontSize: isMobile ? "16px" : "22px",
+          lineHeight: 1,
+          opacity: 0.7,
+        }}
+      >
+        ×
+      </span>
+      <img
+        src="/logo/OtherWays-logo.png"
+        alt="Other Ways"
+        style={{
+          height: isMobile ? "24px" : "50px",
+          width: "auto",
+          display: "block",
+        }}
+      />
+    </div>
+  );
 
   return (
     <main
@@ -203,6 +249,13 @@ export default function Page() {
         }}
       />
 
+      {/*
+        Header енді үш бөлек flex-аймақ: [лого] [nav — қалған бос орынды алады] [тіл/меню].
+        Бұрын nav absolute + translate арқылы экранның дәл ортасына қойылатын, сол себепті
+        1280–1450px аралығындағы ноутбук/планшет ендерінде лого мен nav бір-біріне түсіп кетуі
+        мүмкін еді. Қазір nav тек өзіне қалған кеңістікте орталықтанады — logo/right ешқашан
+        баспалмайды.
+      */}
       <header
         style={{
           position: "absolute",
@@ -211,123 +264,99 @@ export default function Page() {
           right: 0,
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
+          flexWrap: isMobile ? "wrap" : "nowrap",
           rowGap: "10px",
+          columnGap: "14px",
           padding: isMobile ? "14px 16px 12px" : "24px 40px",
           zIndex: 3,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: isMobile ? "8px" : "14px",
-            flexWrap: "wrap",
-            marginRight: isMobile ? "auto" : 0,
-            maxWidth: isMobile ? "72%" : "none",
-          }}
-        >
-          <img
-            src="/logo/BezdGam.png"
-            alt="Bezdary Games"
-            style={{
-              height: isMobile ? "56px" : "100px",
-              width: "auto",
-              display: "block",
-            }}
-          />
-          <span
-            style={{
-              color: "#ffffff",
-              fontSize: isMobile ? "16px" : "22px",
-              lineHeight: 1,
-              opacity: 0.7,
-            }}
-          >
-            ×
-          </span>
-          <img
-            src="/logo/OtherWays-logo.png"
-            alt="Other Ways"
-            style={{
-              height: isMobile ? "24px" : "50px",
-              width: "auto",
-              display: "block",
-            }}
-          />
-        </div>
+        <LogoBlock />
 
         {!isMobile && (
           <nav
             aria-label="primary"
             style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
+              flex: "1 1 0%",
+              minWidth: 0,
               display: "flex",
-              alignItems: "center",
-              gap: "clamp(14px, 1.8vw, 30px)",
-              whiteSpace: "nowrap",
+              justifyContent: "center",
+              overflow: "hidden",
             }}
           >
-            {NAV.map((item) => {
-              const isActive = item === activeNav;
-              const isHover = item === hoveredNav;
-              const lit = isActive || isHover;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  aria-current={isActive ? "page" : undefined}
-                  onClick={() => setActiveNav(item)}
-                  onMouseEnter={() => setHoveredNav(item)}
-                  onMouseLeave={() => setHoveredNav(null)}
-                  style={{
-                    position: "relative",
-                    appearance: "none",
-                    WebkitAppearance: "none",
-                    border: "none",
-                    background: "transparent",
-                    padding: "6px 2px",
-                    cursor: "pointer",
-                    color: isActive
-                      ? "#ffffff"
-                      : lit
-                      ? "rgba(255,255,255,0.95)"
-                      : "rgba(255,255,255,0.62)",
-                    fontFamily: "inherit",
-                    fontWeight: isActive ? 700 : 600,
-                    fontSize: "clamp(11px, 0.95vw, 13.5px)",
-                    letterSpacing: "0.14em",
-                    lineHeight: 1,
-                    transform: isHover ? "translateY(-1px)" : "translateY(0)",
-                    transition: "color 0.22s ease, transform 0.22s ease",
-                  }}
-                >
-                  {item}
-                  <span
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "clamp(10px, 1.6vw, 30px)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {NAV.map((item) => {
+                const isActive = item === activeNav;
+                const isHover = item === hoveredNav;
+                const lit = isActive || isHover;
+                return (
+                  <button
+                    key={item}
+                    type="button"
+                    aria-current={isActive ? "page" : undefined}
+                    onClick={() => setActiveNav(item)}
+                    onMouseEnter={() => setHoveredNav(item)}
+                    onMouseLeave={() => setHoveredNav(null)}
                     style={{
-                      position: "absolute",
-                      left: 0,
-                      right: 0,
-                      bottom: -2,
-                      height: "2px",
-                      background: ACCENT,
-                      borderRadius: "2px",
-                      transform: `scaleX(${lit ? 1 : 0})`,
-                      transformOrigin: "left center",
-                      transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
+                      position: "relative",
+                      appearance: "none",
+                      WebkitAppearance: "none",
+                      border: "none",
+                      background: "transparent",
+                      padding: "6px 2px",
+                      cursor: "pointer",
+                      color: isActive
+                        ? "#ffffff"
+                        : lit
+                        ? "rgba(255,255,255,0.95)"
+                        : "rgba(255,255,255,0.62)",
+                      fontFamily: "inherit",
+                      fontWeight: isActive ? 700 : 600,
+                      fontSize: "clamp(11px, 0.95vw, 13.5px)",
+                      letterSpacing: "0.14em",
+                      lineHeight: 1,
+                      transform: isHover ? "translateY(-1px)" : "translateY(0)",
+                      transition: "color 0.22s ease, transform 0.22s ease",
                     }}
-                  />
-                </button>
-              );
-            })}
+                  >
+                    {item}
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        right: 0,
+                        bottom: -2,
+                        height: "2px",
+                        background: ACCENT,
+                        borderRadius: "2px",
+                        transform: `scaleX(${lit ? 1 : 0})`,
+                        transformOrigin: "left center",
+                        transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
+                      }}
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </nav>
         )}
 
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "14px" }}>
+        <div
+          style={{
+            flex: "0 0 auto",
+            marginLeft: isMobile ? "auto" : 0,
+            display: "flex",
+            alignItems: "center",
+            gap: "14px",
+          }}
+        >
           {!isMobile && <LangButtons />}
 
           {isMobile && (
@@ -482,119 +511,203 @@ export default function Page() {
         </div>
       </div>
 
-      <section
-        aria-label="character"
-        style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}
-      >
-        <div
-          className="hero-text char-fade"
-          key={`text-${index}`}
-          style={
-            isMobile
-              ? {
-                  position: "absolute",
-                  left: "20px",
-                  right: "20px",
-                  top: "12%",
-                  maxWidth: "none",
-                }
-              : {
-                  position: "absolute",
-                  left: "clamp(20px, 8vw, 140px)",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  maxWidth: "clamp(260px, 42vw, 560px)",
-                }
-          }
+      {isMobile ? (
+        // Мобильді композиция: мәтін мен кейіпкер суреті енді бір-бірінің үстіне
+        // absolute қабат болып жабылмайды — flex-column ішінде екі бөлек аймақ:
+        // жоғарыда мәтін (қанша орын керек болса, сонша, 48%-ға дейін), төменде
+        // қалған барлық бос орынды алатын сурет. Осылай ұзын сипаттама да суретті
+        // баспайды, қысқа сипаттамада сурет үлкенірек көрінеді.
+        <section
+          aria-label="character"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
-          <h1
+          <div
+            className="hero-text char-fade"
+            key={`text-${index}`}
             style={{
-              fontFamily: "Georgia, 'Times New Roman', serif",
-              color: "#ffffff",
-              fontSize: isMobile ? "clamp(34px, 9vw, 58px)" : "clamp(48px, 9vw, 120px)",
-              letterSpacing: "0.08em",
-              lineHeight: 1,
-              fontWeight: 700,
-              margin: 0,
+              flex: "0 1 auto",
+              minHeight: 0,
+              maxHeight: "48%",
+              overflowY: "auto",
+              pointerEvents: "auto",
+              padding: "100px 20px 0",
             }}
           >
-            {ch.name}
-          </h1>
-          <p
-            style={{
-              fontFamily: "'Courier New', ui-monospace, monospace",
-              color: "rgba(255,255,255,0.85)",
-              fontSize: isMobile ? "clamp(13px, 3.6vw, 15px)" : "clamp(12px, 1.1vw, 16px)",
-              lineHeight: isMobile ? 1.7 : 1.9,
-              letterSpacing: "0.02em",
-              marginTop: isMobile ? "14px" : "clamp(16px, 2vw, 28px)",
-            }}
-          >
-            {ch.description}
-          </p>
-
-          {/* ПЛЕЕР(ЛЕР): string болса — біреу, массив болса — әр трекке бөлек */}
-          {ch.audio && (
-            <div
+            <h1
               style={{
-                pointerEvents: "auto",
-                marginTop: "26px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                color: "#ffffff",
+                fontSize: "clamp(34px, 9vw, 58px)",
+                letterSpacing: "0.08em",
+                lineHeight: 1,
+                fontWeight: 700,
+                margin: 0,
               }}
             >
-              {typeof ch.audio === "string" ? (
-                <VoicePlayer src={ch.audio} />
-              ) : (
-                ch.audio.map((t) => (
-                  <VoicePlayer key={t.src} src={t.src} label={t.label} />
-                ))
-              )}
-            </div>
-          )}
-        </div>
+              {ch.name}
+            </h1>
+            <p
+              style={{
+                fontFamily: "'Courier New', ui-monospace, monospace",
+                color: "rgba(255,255,255,0.85)",
+                fontSize: "clamp(13px, 3.6vw, 15px)",
+                lineHeight: 1.7,
+                letterSpacing: "0.02em",
+                marginTop: "14px",
+              }}
+            >
+              {ch.description}
+            </p>
 
-        <div
-          style={
-            isMobile
-              ? {
-                  position: "absolute",
-                  inset: 0,
+            {/* ПЛЕЕР(ЛЕР): string болса — біреу, массив болса — әр трекке бөлек */}
+            {ch.audio && (
+              <div
+                style={{
+                  marginTop: "20px",
                   display: "flex",
-                  alignItems: "flex-end",
-                  justifyContent: "center",
-                  paddingRight: 0,
-                }
-              : {
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  paddingRight: "clamp(0px, 3vw, 60px)",
-                }
-          }
-        >
-          <img
-            className="hero-char char-fade"
-            key={`img-${index}`}
-            src={ch.image}
-            alt={ch.name}
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                {typeof ch.audio === "string" ? (
+                  <VoicePlayer src={ch.audio} />
+                ) : (
+                  ch.audio.map((t) => (
+                    <VoicePlayer key={t.src} src={t.src} label={t.label} />
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
+          <div
             style={{
-              display: "block",
-              height: isMobile ? "clamp(220px, 48%, 420px)" : "clamp(250px, 72%, 780px)",
-              maxHeight: isMobile ? "56%" : "100%",
-              width: "auto",
-              objectFit: "contain",
-              objectPosition: isMobile ? "bottom center" : "center right",
-              transform:
-                !isMobile && ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
-              transition: "transform 0.4s ease",
+              flex: "1 1 auto",
+              minHeight: 0,
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              paddingBottom: "10px",
+              pointerEvents: "none",
             }}
-          />
-        </div>
-      </section>
+          >
+            <img
+              className="hero-char char-fade"
+              key={`img-${index}`}
+              src={ch.image}
+              alt={ch.name}
+              style={{
+                display: "block",
+                height: "100%",
+                maxHeight: "420px",
+                maxWidth: "92vw",
+                width: "auto",
+                objectFit: "contain",
+                objectPosition: "bottom center",
+              }}
+            />
+          </div>
+        </section>
+      ) : (
+        <section
+          aria-label="character"
+          style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}
+        >
+          <div
+            className="hero-text char-fade"
+            key={`text-${index}`}
+            style={{
+              position: "absolute",
+              left: "clamp(20px, 8vw, 140px)",
+              top: "50%",
+              transform: "translateY(-50%)",
+              maxWidth: "clamp(260px, 42vw, 560px)",
+            }}
+          >
+            <h1
+              style={{
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                color: "#ffffff",
+                fontSize: "clamp(48px, 9vw, 120px)",
+                letterSpacing: "0.08em",
+                lineHeight: 1,
+                fontWeight: 700,
+                margin: 0,
+              }}
+            >
+              {ch.name}
+            </h1>
+            <p
+              style={{
+                fontFamily: "'Courier New', ui-monospace, monospace",
+                color: "rgba(255,255,255,0.85)",
+                fontSize: "clamp(12px, 1.1vw, 16px)",
+                lineHeight: 1.9,
+                letterSpacing: "0.02em",
+                marginTop: "clamp(16px, 2vw, 28px)",
+              }}
+            >
+              {ch.description}
+            </p>
+
+            {/* ПЛЕЕР(ЛЕР): string болса — біреу, массив болса — әр трекке бөлек */}
+            {ch.audio && (
+              <div
+                style={{
+                  pointerEvents: "auto",
+                  marginTop: "26px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                {typeof ch.audio === "string" ? (
+                  <VoicePlayer src={ch.audio} />
+                ) : (
+                  ch.audio.map((t) => (
+                    <VoicePlayer key={t.src} src={t.src} label={t.label} />
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              paddingRight: "clamp(0px, 3vw, 60px)",
+            }}
+          >
+            <img
+              className="hero-char char-fade"
+              key={`img-${index}`}
+              src={ch.image}
+              alt={ch.name}
+              style={{
+                display: "block",
+                height: "clamp(250px, 72%, 780px)",
+                maxHeight: "100%",
+                maxWidth: "58vw",
+                width: "auto",
+                objectFit: "contain",
+                objectPosition: "center right",
+                transform: ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
+                transition: "transform 0.4s ease",
+              }}
+            />
+          </div>
+        </section>
+      )}
 
       <Arrow dir="prev" />
       <Arrow dir="next" />
