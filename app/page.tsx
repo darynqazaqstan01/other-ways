@@ -69,7 +69,7 @@ export default function Page() {
         display: "flex",
         flexDirection: vertical ? "column" : "row",
         alignItems: vertical ? "stretch" : "center",
-        gap: vertical ? "10px" : "clamp(6px, 0.9vw, 12px)",
+        gap: vertical ? "9px" : "clamp(5px, 0.8vw, 11px)",
       }}
     >
       {LANGS.map((l) => {
@@ -89,16 +89,16 @@ export default function Page() {
               border: `1.5px solid ${
                 isActive ? ACCENT : isHover ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.5)"
               }`,
-              borderRadius: "clamp(8px, 1vw, 12px)",
+              borderRadius: "clamp(7px, 0.9vw, 11px)",
               background: isHover && !isActive ? "rgba(255,255,255,0.08)" : "transparent",
               color: isActive ? ACCENT : "rgba(255,255,255,0.92)",
               fontFamily: "inherit",
               fontWeight: 700,
-              fontSize: vertical ? "15px" : "clamp(11px, 1.1vw, 15px)",
+              fontSize: vertical ? "14px" : "clamp(10px, 1vw, 13.5px)",
               letterSpacing: "0.06em",
               padding: vertical
-                ? "11px 16px"
-                : "clamp(6px, 0.8vw, 9px) clamp(11px, 1.3vw, 17px)",
+                ? "10px 14px"
+                : "clamp(5px, 0.72vw, 8px) clamp(10px, 1.17vw, 15px)",
               lineHeight: 1,
               cursor: "pointer",
               transform: isHover ? "translateY(-2px)" : "translateY(0)",
@@ -134,8 +134,8 @@ export default function Page() {
           bottom: isMobile ? "22%" : "auto",
           transform: `translateY(${isMobile ? "0px" : "-50%"}) scale(${isHover ? 1.1 : 1})`,
           zIndex: 4,
-          width: "clamp(40px, 3.2vw, 52px)",
-          height: "clamp(40px, 3.2vw, 52px)",
+          width: "clamp(36px, 2.88vw, 47px)",
+          height: "clamp(36px, 2.88vw, 47px)",
           borderRadius: "50%",
           border: `1.5px solid ${isHover ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.4)"}`,
           background: isHover ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)",
@@ -149,13 +149,13 @@ export default function Page() {
           padding: 0,
           transition: "all 0.22s ease",
           ...(dir === "prev"
-            ? { left: "clamp(16px, 3vw, 60px)" }
-            : { right: "clamp(16px, 3vw, 60px)" }),
+            ? { left: "clamp(14px, 2.7vw, 54px)" }
+            : { right: "clamp(14px, 2.7vw, 54px)" }),
         }}
       >
         <svg
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -175,7 +175,7 @@ export default function Page() {
         flex: "0 0 auto",
         display: "flex",
         alignItems: "center",
-        gap: isMobile ? "8px" : "14px",
+        gap: isMobile ? "7px" : "13px",
         flexWrap: "wrap",
         marginRight: isMobile ? "auto" : 0,
         maxWidth: isMobile ? "72%" : "none",
@@ -185,7 +185,7 @@ export default function Page() {
         src="/logo/BezdGam.png"
         alt="Bezdary Games"
         style={{
-          height: isMobile ? "56px" : "100px",
+          height: isMobile ? "50px" : "90px",
           width: "auto",
           display: "block",
         }}
@@ -193,7 +193,7 @@ export default function Page() {
       <span
         style={{
           color: "#ffffff",
-          fontSize: isMobile ? "16px" : "22px",
+          fontSize: isMobile ? "14px" : "20px",
           lineHeight: 1,
           opacity: 0.7,
         }}
@@ -204,7 +204,7 @@ export default function Page() {
         src="/logo/OtherWays-logo.png"
         alt="Other Ways"
         style={{
-          height: isMobile ? "24px" : "50px",
+          height: isMobile ? "22px" : "45px",
           width: "auto",
           display: "block",
         }}
@@ -265,9 +265,9 @@ export default function Page() {
           display: "flex",
           alignItems: "center",
           flexWrap: isMobile ? "wrap" : "nowrap",
-          rowGap: "10px",
-          columnGap: "14px",
-          padding: isMobile ? "14px 16px 12px" : "24px 40px",
+          rowGap: "9px",
+          columnGap: "13px",
+          padding: isMobile ? "13px 14px 11px" : "22px 36px",
           zIndex: 3,
         }}
       >
@@ -288,7 +288,7 @@ export default function Page() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "clamp(10px, 1.6vw, 30px)",
+                gap: "clamp(9px, 1.44vw, 27px)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -310,7 +310,7 @@ export default function Page() {
                       WebkitAppearance: "none",
                       border: "none",
                       background: "transparent",
-                      padding: "6px 2px",
+                      padding: "5px 2px",
                       cursor: "pointer",
                       color: isActive
                         ? "#ffffff"
@@ -319,7 +319,7 @@ export default function Page() {
                         : "rgba(255,255,255,0.62)",
                       fontFamily: "inherit",
                       fontWeight: isActive ? 700 : 600,
-                      fontSize: "clamp(11px, 0.95vw, 13.5px)",
+                      fontSize: "clamp(10px, 0.86vw, 12px)",
                       letterSpacing: "0.14em",
                       lineHeight: 1,
                       transform: isHover ? "translateY(-1px)" : "translateY(0)",
@@ -354,7 +354,7 @@ export default function Page() {
             marginLeft: isMobile ? "auto" : 0,
             display: "flex",
             alignItems: "center",
-            gap: "14px",
+            gap: "13px",
           }}
         >
           {!isMobile && <LangButtons />}
@@ -371,13 +371,13 @@ export default function Page() {
                 border: "1.5px solid rgba(255,255,255,0.5)",
                 borderRadius: "10px",
                 background: "transparent",
-                width: "42px",
-                height: "38px",
+                width: "38px",
+                height: "34px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "5px",
+                gap: "4px",
                 cursor: "pointer",
                 padding: 0,
               }}
@@ -387,7 +387,7 @@ export default function Page() {
                   key={n}
                   style={{
                     display: "block",
-                    width: "20px",
+                    width: "18px",
                     height: "2px",
                     background: "#ffffff",
                     borderRadius: "2px",
@@ -536,14 +536,14 @@ export default function Page() {
               maxHeight: "48%",
               overflowY: "auto",
               pointerEvents: "auto",
-              padding: "100px 20px 0",
+              padding: "90px 18px 0",
             }}
           >
             <h1
               style={{
                 fontFamily: "Georgia, 'Times New Roman', serif",
                 color: "#ffffff",
-                fontSize: "clamp(34px, 9vw, 58px)",
+                fontSize: "clamp(31px, 8.1vw, 52px)",
                 letterSpacing: "0.08em",
                 lineHeight: 1,
                 fontWeight: 700,
@@ -556,10 +556,10 @@ export default function Page() {
               style={{
                 fontFamily: "'Courier New', ui-monospace, monospace",
                 color: "rgba(255,255,255,0.85)",
-                fontSize: "clamp(13px, 3.6vw, 15px)",
+                fontSize: "clamp(12px, 3.24vw, 13.5px)",
                 lineHeight: 1.7,
                 letterSpacing: "0.02em",
-                marginTop: "14px",
+                marginTop: "13px",
               }}
             >
               {ch.description}
@@ -569,10 +569,10 @@ export default function Page() {
             {ch.audio && (
               <div
                 style={{
-                  marginTop: "20px",
+                  marginTop: "18px",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "10px",
+                  gap: "9px",
                 }}
               >
                 {typeof ch.audio === "string" ? (
@@ -593,7 +593,7 @@ export default function Page() {
               display: "flex",
               alignItems: "flex-end",
               justifyContent: "center",
-              paddingBottom: "10px",
+              paddingBottom: "9px",
               pointerEvents: "none",
             }}
           >
@@ -605,8 +605,8 @@ export default function Page() {
               style={{
                 display: "block",
                 height: "100%",
-                maxHeight: "420px",
-                maxWidth: "92vw",
+                maxHeight: "378px",
+                maxWidth: "83vw",
                 width: "auto",
                 objectFit: "contain",
                 objectPosition: "bottom center",
@@ -624,17 +624,17 @@ export default function Page() {
             key={`text-${index}`}
             style={{
               position: "absolute",
-              left: "clamp(20px, 8vw, 140px)",
+              left: "clamp(18px, 7.2vw, 126px)",
               top: "50%",
               transform: "translateY(-50%)",
-              maxWidth: "clamp(260px, 42vw, 560px)",
+              maxWidth: "clamp(234px, 37.8vw, 504px)",
             }}
           >
             <h1
               style={{
                 fontFamily: "Georgia, 'Times New Roman', serif",
                 color: "#ffffff",
-                fontSize: "clamp(48px, 9vw, 120px)",
+                fontSize: "clamp(43px, 8.1vw, 108px)",
                 letterSpacing: "0.08em",
                 lineHeight: 1,
                 fontWeight: 700,
@@ -647,10 +647,10 @@ export default function Page() {
               style={{
                 fontFamily: "'Courier New', ui-monospace, monospace",
                 color: "rgba(255,255,255,0.85)",
-                fontSize: "clamp(12px, 1.1vw, 16px)",
+                fontSize: "clamp(11px, 1vw, 14.5px)",
                 lineHeight: 1.9,
                 letterSpacing: "0.02em",
-                marginTop: "clamp(16px, 2vw, 28px)",
+                marginTop: "clamp(14px, 1.8vw, 25px)",
               }}
             >
               {ch.description}
@@ -661,10 +661,10 @@ export default function Page() {
               <div
                 style={{
                   pointerEvents: "auto",
-                  marginTop: "26px",
+                  marginTop: "23px",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "10px",
+                  gap: "9px",
                 }}
               >
                 {typeof ch.audio === "string" ? (
@@ -685,7 +685,7 @@ export default function Page() {
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-end",
-              paddingRight: "clamp(0px, 3vw, 60px)",
+              paddingRight: "clamp(0px, 2.7vw, 54px)",
             }}
           >
             <img
@@ -695,9 +695,9 @@ export default function Page() {
               alt={ch.name}
               style={{
                 display: "block",
-                height: "clamp(250px, 72%, 780px)",
+                height: "clamp(225px, 65%, 702px)",
                 maxHeight: "100%",
-                maxWidth: "58vw",
+                maxWidth: "52vw",
                 width: "auto",
                 objectFit: "contain",
                 objectPosition: "center right",
