@@ -576,23 +576,36 @@ export default function Page() {
                 }
           }
         >
-          <img
-            className="hero-char char-fade"
-            key={`img-${index}`}
-            src={ch.image}
-            alt={ch.name}
+          <div
             style={{
-              display: "block",
-              height: isMobile ? "clamp(220px, 48%, 420px)" : "clamp(250px, 72%, 780px)",
-              maxHeight: isMobile ? "56%" : "100%",
-              width: "auto",
-              objectFit: "contain",
-              objectPosition: isMobile ? "bottom center" : "center right",
-              transform:
-                !isMobile && ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
-              transition: "transform 0.4s ease",
+              width: isMobile ? "min(100%, 320px)" : "min(100%, 520px)",
+              height: isMobile ? "min(56vh, 420px)" : "min(84vh, 780px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+              padding: isMobile ? "0 8px" : "0 12px",
             }}
-          />
+          >
+            <img
+              className="hero-char char-fade"
+              key={`img-${index}`}
+              src={ch.image}
+              alt={ch.name}
+              style={{
+                display: "block",
+                width: "100%",
+                height: "100%",
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+                objectPosition: isMobile ? "bottom center" : "center right",
+                transform:
+                  !isMobile && ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
+                transition: "transform 0.4s ease",
+              }}
+            />
+          </div>
         </div>
       </section>
 
