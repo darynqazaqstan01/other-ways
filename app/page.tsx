@@ -583,7 +583,7 @@ export default function Page() {
             alt={ch.name}
             style={{
               display: "block",
-              height: isMobile ? "clamp(220px, 48%, 420px)" : "clamp(280px, 80%, 860px)",
+              height: isMobile ? "clamp(220px, 48%, 420px)" : "clamp(250px, 72%, 780px)",
               maxHeight: isMobile ? "56%" : "100%",
               width: "auto",
               objectFit: "contain",
