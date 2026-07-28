@@ -570,9 +570,9 @@ export default function Page() {
                   position: "absolute",
                   inset: 0,
                   display: "flex",
-                  alignItems: "flex-end",
+                  alignItems: "center",
                   justifyContent: "flex-end",
-                  paddingRight: "clamp(0px, 4vw, 90px)",
+                  paddingRight: "clamp(0px, 3vw, 60px)",
                 }
           }
         >
@@ -583,11 +583,11 @@ export default function Page() {
             alt={ch.name}
             style={{
               display: "block",
-              height: isMobile ? "clamp(220px, 48%, 420px)" : "clamp(320px, 88%, 920px)",
+              height: isMobile ? "clamp(220px, 48%, 420px)" : "clamp(280px, 80%, 860px)",
               maxHeight: isMobile ? "56%" : "100%",
               width: "auto",
               objectFit: "contain",
-              objectPosition: isMobile ? "bottom center" : "bottom right",
+              objectPosition: isMobile ? "bottom center" : "center right",
               transform:
                 !isMobile && ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
               transition: "transform 0.4s ease",
