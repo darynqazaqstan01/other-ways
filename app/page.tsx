@@ -567,7 +567,7 @@ export default function Page() {
           style={{
             width: TEXT_W,
             flexShrink: 0,
-            minWidth: 0,
+            minWidth: 10,
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
