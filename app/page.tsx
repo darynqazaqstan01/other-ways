@@ -25,6 +25,84 @@ const TITLE_BASE_M = 54,  TITLE_MIN_M = 26;
 const DESC_BASE_D = 16,   DESC_MIN_D = 11;
 const DESC_BASE_M = 15,   DESC_MIN_M = 10;
 
+function FitImage({
+  src,
+  alt,
+  shift,
+  isMobile,
+}: {
+  src: string;
+  alt: string;
+  shift?: number;
+  isMobile: boolean;
+}) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  const [natural, setNatural] = useState({ w: 0, h: 0 });
+
+  // Реальный размер контейнера (то, что реально дала flex-раскладка)
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // На случай, если картинка уже в кеше браузера и onLoad не успевает сработать
+  useEffect(() => {
+    const el = imgRef.current;
+    if (el && el.complete && el.naturalWidth) {
+      setNatural({ w: el.naturalWidth, h: el.naturalHeight });
+    }
+  }, [src]);
+
+  // Вписываем оригинал в контейнер с сохранением пропорций —
+  // одинаково для увеличения и для уменьшения
+  const ready = box.w > 0 && box.h > 0 && natural.w > 0 && natural.h > 0;
+  const scale = ready ? Math.min(box.w / natural.w, box.h / natural.h) : 0;
+  const renderW = ready ? natural.w * scale : 0;
+  const renderH = ready ? natural.h * scale : 0;
+
+  return (
+    <div
+      ref={boxRef}
+      style={{
+        flex: "1 1 auto",
+        minWidth: 0,
+        minHeight: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        onLoad={(e) => {
+          const el = e.currentTarget;
+          setNatural({ w: el.naturalWidth, h: el.naturalHeight });
+        }}
+        className="char-fade"
+        style={{
+          display: "block",
+          width: ready ? `${renderW}px` : "1px",
+          height: ready ? `${renderH}px` : "1px",
+          opacity: ready ? 1 : 0, // прячем до расчёта, чтобы не мелькал неверный размер
+          objectFit: "contain",   // подстраховка, реального эффекта уже почти не даёт
+          transform: !isMobile && shift ? `translateX(${shift}px)` : undefined,
+          transition: "opacity 0.25s ease, transform 0.4s ease",
+        }}
+      />
+    </div>
+  );
+}
+
 export default function Page() {
   const [current, setCurrent] = useState(0);
   const [lang, setLang] = useState<Lang>("KZ");
@@ -489,6 +567,7 @@ export default function Page() {
           style={{
             width: TEXT_W,
             flexShrink: 0,
+            minWidth: 0,
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
@@ -561,20 +640,12 @@ export default function Page() {
             overflow: "hidden",
           }}
         >
-          <img
-            className="char-fade"
+          <FitImage
             key={`img-${index}`}
             src={ch.image}
             alt={ch.name}
-            style={{
-              display: "block",
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              objectPosition: "center",
-              transform: !isMobile && ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
-              transition: "transform 0.4s ease",
-            }}
+            shift={ch.imageShift}
+            isMobile={isMobile}
           />
         </div>
       </section>
