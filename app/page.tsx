@@ -590,41 +590,25 @@ function FitImage({
   shift?: number;
   isMobile: boolean;
 }) {
-  const boxRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
-  const [box, setBox] = useState({ w: 0, h: 0 });
-  const [natural, setNatural] = useState({ w: 0, h: 0 });
+  const [loaded, setLoaded] = useState(false);
 
-  // Реальный размер контейнера (то, что реально дала flex-раскладка)
+  // Подстраховка для уже закэшированных картинок —
+  // иногда onLoad не успевает сработать, если картинка была в кэше браузера
   useEffect(() => {
-    const el = boxRef.current;
-    if (!el) return;
-    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight });
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  // На случай, если картинка уже в кеше браузера и onLoad не успевает сработать
-  useEffect(() => {
+    setLoaded(false);
     const el = imgRef.current;
-    if (el && el.complete && el.naturalWidth) {
-      setNatural({ w: el.naturalWidth, h: el.naturalHeight });
+    if (el && el.complete && el.naturalWidth > 0) {
+      setLoaded(true);
     }
   }, [src]);
 
-  // Вписываем оригинал в контейнер с сохранением пропорций — одинаково для увеличения и для уменьшения
-  const ready = box.w > 0 && box.h > 0 && natural.w > 0 && natural.h > 0;
-  const scale = ready ? Math.min(box.w / natural.w, box.h / natural.h) : 0;
-  const renderW = ready ? natural.w * scale : 0;
-  const renderH = ready ? natural.h * scale : 0;
-
   return (
     <div
-      ref={boxRef}
       style={{
         flex: "1 1 auto",
+        width: "100%",
+        height: "100%",
         minWidth: 0,
         minHeight: 0,
         display: "flex",
@@ -637,17 +621,17 @@ function FitImage({
         ref={imgRef}
         src={src}
         alt={alt}
-        onLoad={(e) => {
-          const el = e.currentTarget;
-          setNatural({ w: el.naturalWidth, h: el.naturalHeight });
-        }}
+        onLoad={() => setLoaded(true)}
+        onError={() => console.error("[FitImage] не загрузилась картинка:", src)}
         className="char-fade"
         style={{
           display: "block",
-          width: ready ? `${renderW}px` : "1px",
-          height: ready ? `${renderH}px` : "1px",
-          opacity: ready ? 1 : 0, // прячем до расчёта, чтобы не мелькал неверный размер
-          objectFit: "contain", // подстраховка, реального эффекта уже почти не даёт
+          maxWidth: "100%",
+          maxHeight: "100%",
+          width: "auto",
+          height: "auto",
+          objectFit: "contain",
+          opacity: loaded ? 1 : 0,
           transform: !isMobile && shift ? `translateX(${shift}px)` : undefined,
           transition: "opacity 0.25s ease, transform 0.4s ease",
         }}
