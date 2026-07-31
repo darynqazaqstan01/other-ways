@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 const ACCENT = "#76e000";
 // Кішкентай тақырып — label берілмесе, осы шығады.
-const VOICE_LABEL = "ДАУЫСЫ";
+const VOICE_LABEL = "ГОЛОС";
 
 function fmt(t: number) {
   if (!isFinite(t) || t < 0) return "0:00";
