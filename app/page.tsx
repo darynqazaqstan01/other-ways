@@ -73,8 +73,14 @@ export default function Page() {
 
   const ch = CHARACTERS[index];
 
-  // Автоподбор: заголовок ≤2 строк (сжатие до 1 строки и стоп),
-  // текст уменьшается пока не влезет весь; плеер фиксирован и не участвует.
+  // ─────────────────────────────────────────────────────────────
+  // Автоподбор заголовка и текста.
+  // Заголовок: максимум 2 строки, слова НЕ переносятся по буквам —
+  // если слово/строка не влезает по ширине или строк больше 2,
+  // шрифт уменьшается, пока не влезет (либо до titleMin).
+  // Текст: уменьшается, пока не влезет полностью в остаток высоты.
+  // Плеер в подгоне не участвует — у него фиксированный размер.
+  // ─────────────────────────────────────────────────────────────
   const fitText = useCallback(() => {
     const upper = upperRef.current, title = titleRef.current, desc = descRef.current;
     if (!upper || !title || !desc) return;
@@ -89,12 +95,21 @@ export default function Page() {
     const avail = upper.clientHeight;
     if (avail <= 0) return;
 
-    const lines = () => Math.ceil(title.scrollHeight / parseFloat(title.style.fontSize || "1"));
+    const lineHeightPx = () => {
+      const lh = parseFloat(getComputedStyle(title).lineHeight || "0");
+      if (lh && !Number.isNaN(lh)) return lh;
+      return parseFloat(title.style.fontSize || "16") * 1.15;
+    };
+    const lines = () => Math.max(1, Math.round(title.scrollHeight / lineHeightPx()));
+    // scrollWidth > clientWidth означает, что слово не влезает и не может
+    // перенестись (т.к. запрещён перенос внутри слова) — значит, мелко.
+    const overflowsWidth = () => title.scrollWidth > title.clientWidth + 1;
 
-    // 1) заголовок: не больше 2 строк
+    // 1) заголовок: не больше 2 строк и без горизонтального переполнения
     let ts = titleBase;
     title.style.fontSize = ts + "px";
-    while (ts > titleMin && lines() > 2) {
+    let guardT = 0;
+    while (ts > titleMin && (lines() > 2 || overflowsWidth()) && guardT++ < 100) {
       ts -= 2;
       title.style.fontSize = ts + "px";
     }
@@ -116,7 +131,7 @@ export default function Page() {
       title.style.fontSize = ts + "px";
       if (lines() <= 1) break; // дальше не уменьшаем
     }
-  }, [isMobile, index]);
+  }, [isMobile]);
 
   useLayoutEffect(() => {
     fitText();
@@ -489,7 +504,7 @@ export default function Page() {
           style={{
             width: TEXT_W,
             flexShrink: 0,
-            minWidth: 0, // добавлено
+            minWidth: 0,
             minHeight: 0,
             display: "flex",
             flexDirection: "column",
@@ -505,10 +520,16 @@ export default function Page() {
                 color: "#ffffff",
                 fontSize: isMobile ? TITLE_BASE_M : TITLE_BASE_D,
                 letterSpacing: "0.06em",
-                lineHeight: 1,
+                lineHeight: 1.05,
                 fontWeight: 700,
                 margin: 0,
-                wordBreak: "break-word",
+                maxWidth: "100%",
+                // ключевой фикс: НЕ переносить слово по буквам —
+                // перенос возможен только между словами
+                whiteSpace: "normal",
+                wordBreak: "keep-all",
+                overflowWrap: "normal",
+                hyphens: "none",
               }}
             >
               {ch.name}
@@ -523,6 +544,8 @@ export default function Page() {
                 letterSpacing: "0.02em",
                 marginTop: UPPER_GAP,
                 marginBottom: 0,
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
               }}
             >
               {ch.description}
@@ -550,15 +573,13 @@ export default function Page() {
           )}
         </div>
 
-        {/* ПРАВЫЙ КОНТЕЙНЕР — картинка по центру, contain (масштаб по максимуму с пропорцией) */}
+        {/* ПРАВЫЙ КОНТЕЙНЕР — картинка по центру, вписывается по пропорции,
+            смещение (imageShift) ограничено границами контейнера */}
         <div
           style={{
             flex: "1 1 auto",
             minWidth: 0,
             minHeight: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             overflow: "hidden",
           }}
         >
@@ -579,6 +600,24 @@ export default function Page() {
   );
 }
 
+/**
+ * FitImage — вписывает изображение в контейнер с сохранением пропорций
+ * (аналог object-fit: contain), центрирует его, а затем применяет
+ * художественное смещение (imageShift), СТРОГО ограниченное так,
+ * чтобы картинка никогда не выходила за пределы контейнера и не обрезалась.
+ *
+ * Логика:
+ * 1) читаем реальный (natural) размер картинки;
+ * 2) читаем размер контейнера (ResizeObserver — отслеживает ресайз окна);
+ * 3) scale = min(containerW / naturalW, containerH / naturalH) — это и есть
+ *    "contain": если картинка больше контейнера — уменьшаем,
+ *    если меньше — увеличиваем, пропорция сохраняется;
+ * 4) renderW/H — итоговый размер картинки после вписывания;
+ * 5) базовая позиция — точный центр контейнера;
+ * 6) сдвиг shift ограничивается (clamp) максимально доступным
+ *    свободным пространством по горизонтали, поэтому изображение
+ *    может сместиться к краю, но никогда не вылезет за него.
+ */
 function FitImage({
   src,
   alt,
@@ -590,35 +629,75 @@ function FitImage({
   shift?: number;
   isMobile: boolean;
 }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState({ w: 0, h: 0 });
+  const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
+
+  // Отслеживаем размер контейнера
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => setContainerSize({ w: el.clientWidth, h: el.clientHeight });
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Загружаем изображение и узнаём его реальный (natural) размер
+  useEffect(() => {
+    let cancelled = false;
+    setNatural(null);
+    const img = new window.Image();
+    img.onload = () => {
+      if (!cancelled) setNatural({ w: img.naturalWidth, h: img.naturalHeight });
+    };
+    img.src = src;
+    return () => {
+      cancelled = true;
+    };
+  }, [src]);
+
+  let renderW = 0;
+  let renderH = 0;
+  let left = 0;
+  let top = 0;
+  let ready = false;
+
+  if (natural && natural.w > 0 && natural.h > 0 && containerSize.w > 0 && containerSize.h > 0) {
+    const scale = Math.min(containerSize.w / natural.w, containerSize.h / natural.h);
+    renderW = natural.w * scale;
+    renderH = natural.h * scale;
+
+    const baseLeft = (containerSize.w - renderW) / 2;
+    top = (containerSize.h - renderH) / 2;
+
+    // Максимально допустимый сдвиг — чтобы не выйти за левую/правую границу контейнера
+    const maxShift = Math.max(0, baseLeft);
+    const requestedShift = !isMobile && shift ? shift : 0;
+    const clampedShift = Math.max(-maxShift, Math.min(requestedShift, maxShift));
+
+    left = baseLeft + clampedShift;
+    ready = true;
+  }
+
   return (
-    <div
-      style={{
-        flex: "1 1 auto",
-        width: "100%",
-        height: "100%",
-        minWidth: 0,
-        minHeight: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
-      }}
-    >
-      <img
-        src={src}
-        alt={alt}
-        className="char-fade"
-        style={{
-          display: "block",
-          maxWidth: "100%",
-          maxHeight: "100%",
-          width: "auto",
-          height: "auto",
-          objectFit: "contain",
-          transform: !isMobile && shift ? `translateX(${shift}px)` : undefined,
-          transition: "opacity 0.25s ease, transform 0.4s ease",
-        }}
-      />
+    <div ref={containerRef} style={{ position: "relative", width: "100%", height: "100%" }}>
+      {ready && (
+        <img
+          src={src}
+          alt={alt}
+          className="char-fade"
+          style={{
+            position: "absolute",
+            left,
+            top,
+            width: renderW,
+            height: renderH,
+            transition: "left 0.4s ease, top 0.4s ease, opacity 0.25s ease",
+          }}
+        />
+      )}
     </div>
   );
 }
