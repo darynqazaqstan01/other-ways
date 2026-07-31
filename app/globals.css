@@ -4,16 +4,6 @@
 
 html,
 body {
-  margin: 0;
-  padding: 0;
-  background: #000000;
-  color: #ffffff;
-  overflow: hidden;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
-
-html,
-body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -27,4 +17,8 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-.char-fade { animation: charFade 0.45s ease both; }
+
+.char-fade {
+  opacity: 1; /* видна сразу, даже если анимация не запустится */
+  animation: charFade 0.45s ease-out;
+}
