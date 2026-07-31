@@ -27,7 +27,7 @@ const DESC_BASE_M = 15,   DESC_MIN_M = 10;
 
 export default function Page() {
   const [current, setCurrent] = useState(0);
-  const [lang, setLang] = useState<Lang>("KZ");
+  const [lang, setLang] = useState<Lang>("RU");
   const [hoveredLang, setHoveredLang] = useState<Lang | null>(null);
 
   const [activeNav, setActiveNav] = useState("HOME");
@@ -73,7 +73,8 @@ export default function Page() {
 
   const ch = CHARACTERS[index];
 
-  // Автоподбор шрифта
+  // Автоподбор: заголовок ≤2 строк (сжатие до 1 строки и стоп),
+  // текст уменьшается пока не влезет весь; плеер фиксирован и не участвует.
   const fitText = useCallback(() => {
     const upper = upperRef.current, title = titleRef.current, desc = descRef.current;
     if (!upper || !title || !desc) return;
@@ -83,7 +84,7 @@ export default function Page() {
     const titleMin = m ? TITLE_MIN_M : TITLE_MIN_D;
     const descBase = m ? DESC_BASE_M : DESC_BASE_D;
     const descMin = m ? DESC_MIN_M : DESC_MIN_D;
-    const GAP = m ? 12 : 22;
+    const GAP = m ? 12 : 22; // расстояние заголовок↔текст (== marginTop текста)
 
     const avail = upper.clientHeight;
     if (avail <= 0) return;
@@ -108,12 +109,12 @@ export default function Page() {
       desc.style.fontSize = ds + "px";
     }
 
-    // 3) если текст всё ещё не влез — жмём заголовок до 1 строки
+    // 3) если текст всё ещё не влез — жмём заголовок до 1 строки (и стоп)
     guard = 0;
     while (desc.scrollHeight > room() + 1 && ts > titleMin && guard++ < 60) {
       ts -= 2;
       title.style.fontSize = ts + "px";
-      if (lines() <= 1) break;
+      if (lines() <= 1) break; // дальше не уменьшаем
     }
   }, [isMobile, index]);
 
@@ -224,6 +225,7 @@ export default function Page() {
     );
   };
 
+  // Боковые отступы контент-блока = зона стрелок + запас, чтобы стрелки висели в полях
   const SIDE = isMobile ? "58px" : "clamp(86px, 7vw, 150px)";
   const TEXT_W = isMobile ? "auto" : "clamp(360px, 30vw, 560px)";
   const UPPER_GAP = isMobile ? 12 : 22;
@@ -249,6 +251,7 @@ export default function Page() {
       ))}
 
       <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.8)", pointerEvents: "none", zIndex: 1 }} />
+      {/* ambient-виньетка для глубины */}
       <div
         style={{
           position: "absolute",
@@ -463,7 +466,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* КОНТЕНТ-БЛОК */}
+      {/* КОНТЕНТ-БЛОК: два контейнера (текст | картинка), не перекрываются */}
       <section
         aria-label="character"
         style={{
@@ -479,19 +482,21 @@ export default function Page() {
           gap: isMobile ? "12px" : "clamp(24px, 3vw, 64px)",
         }}
       >
-        {/* ЛЕВЫЙ КОНТЕЙНЕР — текст */}
+        {/* ЛЕВЫЙ КОНТЕЙНЕР — текст (фикс. ширина на desktop) */}
         <div
           className="char-fade"
           key={`text-${index}`}
           style={{
             width: TEXT_W,
             flexShrink: 0,
+            minWidth: 0, // добавлено
+            minHeight: 0,
             display: "flex",
             flexDirection: "column",
-            minHeight: 0,
             flex: isMobile ? "1 1 auto" : "0 0 auto",
           }}
         >
+          {/* верх: заголовок + текст (автоподбор) */}
           <div ref={upperRef} style={{ flex: "1 1 auto", minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <h1
               ref={titleRef}
@@ -524,6 +529,7 @@ export default function Page() {
             </p>
           </div>
 
+          {/* низ (футер): плеер(ы) фиксированного размера */}
           {ch.audio && (
             <div
               style={{
@@ -544,7 +550,7 @@ export default function Page() {
           )}
         </div>
 
-        {/* ПРАВЫЙ КОНТЕЙНЕР — Картинка заполняет всё доступное пространство по максимуму с сохранением пропорций */}
+        {/* ПРАВЫЙ КОНТЕЙНЕР — картинка по центру, contain (масштаб по максимуму с пропорцией) */}
         <div
           style={{
             flex: "1 1 auto",
@@ -556,28 +562,96 @@ export default function Page() {
             overflow: "hidden",
           }}
         >
-          <img
+          <FitImage
             key={`img-${index}`}
             src={ch.image}
             alt={ch.name}
-            className="char-fade"
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              width: "auto",
-              height: "auto",
-              objectFit: "contain",
-              display: "block",
-              transform: !isMobile && ch.imageShift ? `translateX(${ch.imageShift}px)` : undefined,
-              transition: "transform 0.4s ease",
-            }}
+            shift={ch.imageShift}
+            isMobile={isMobile}
           />
         </div>
       </section>
 
-      {/* СТРЕЛКИ */}
+      {/* СТРЕЛКИ — вне контент-контейнеров, по центру экрана поверх фона */}
       <Arrow dir="prev" />
       <Arrow dir="next" />
     </main>
+  );
+}
+
+function FitImage({
+  src,
+  alt,
+  shift,
+  isMobile,
+}: {
+  src: string;
+  alt: string;
+  shift?: number;
+  isMobile: boolean;
+}) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  const [natural, setNatural] = useState({ w: 0, h: 0 });
+
+  // Реальный размер контейнера (то, что реально дала flex-раскладка)
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // На случай, если картинка уже в кеше браузера и onLoad не успевает сработать
+  useEffect(() => {
+    const el = imgRef.current;
+    if (el && el.complete && el.naturalWidth) {
+      setNatural({ w: el.naturalWidth, h: el.naturalHeight });
+    }
+  }, [src]);
+
+  // Вписываем оригинал в контейнер с сохранением пропорций — одинаково для увеличения и для уменьшения
+  const ready = box.w > 0 && box.h > 0 && natural.w > 0 && natural.h > 0;
+  const scale = ready ? Math.min(box.w / natural.w, box.h / natural.h) : 0;
+  const renderW = ready ? natural.w * scale : 0;
+  const renderH = ready ? natural.h * scale : 0;
+
+  return (
+    <div
+      ref={boxRef}
+      style={{
+        flex: "1 1 auto",
+        minWidth: 0,
+        minHeight: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        onLoad={(e) => {
+          const el = e.currentTarget;
+          setNatural({ w: el.naturalWidth, h: el.naturalHeight });
+        }}
+        className="char-fade"
+        style={{
+          display: "block",
+          width: ready ? `${renderW}px` : "1px",
+          height: ready ? `${renderH}px` : "1px",
+          opacity: ready ? 1 : 0, // прячем до расчёта, чтобы не мелькал неверный размер
+          objectFit: "contain", // подстраховка, реального эффекта уже почти не даёт
+          transform: !isMobile && shift ? `translateX(${shift}px)` : undefined,
+          transition: "opacity 0.25s ease, transform 0.4s ease",
+        }}
+      />
+    </div>
   );
 }
