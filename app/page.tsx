@@ -590,19 +590,6 @@ function FitImage({
   shift?: number;
   isMobile: boolean;
 }) {
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [loaded, setLoaded] = useState(false);
-
-  // Подстраховка для уже закэшированных картинок —
-  // иногда onLoad не успевает сработать, если картинка была в кэше браузера
-  useEffect(() => {
-    setLoaded(false);
-    const el = imgRef.current;
-    if (el && el.complete && el.naturalWidth > 0) {
-      setLoaded(true);
-    }
-  }, [src]);
-
   return (
     <div
       style={{
@@ -618,11 +605,8 @@ function FitImage({
       }}
     >
       <img
-        ref={imgRef}
         src={src}
         alt={alt}
-        onLoad={() => setLoaded(true)}
-        onError={() => console.error("[FitImage] не загрузилась картинка:", src)}
         className="char-fade"
         style={{
           display: "block",
@@ -631,7 +615,6 @@ function FitImage({
           width: "auto",
           height: "auto",
           objectFit: "contain",
-          opacity: loaded ? 1 : 0,
           transform: !isMobile && shift ? `translateX(${shift}px)` : undefined,
           transition: "opacity 0.25s ease, transform 0.4s ease",
         }}
